@@ -1,13 +1,14 @@
 # PES_PROJECT_5- Principles of Embedded Software 
 
 ## Contributors - Utkarsh Dviwedi and Harsh Rathore
-PES Project 5 – UART Communications with PC 
-The fifth PES project will have you connect to the KL25Z USB port to send and receive data from a PC-based terminal program. This setup will allow you to exercise more advanced firmware topics, including UART communication device drivers, circular buffers, and more on interrupts and timers. You will also capture oscilloscope or logic analyzer output and develop an FMEA document for the project.
+ UART Communications with PC 
+The project will have you connect to the KL25Z USB port to send and receive data from a PC-based terminal program. This setup will allow you to exercise more advanced firmware topics, including UART communication device drivers, circular buffers, and more on interrupts and timers. You will also capture oscilloscope or logic analyzer output and develop an FMEA document for the project.
 This project is targeted to run on the KL25Z only – the program should (as in project 4) be capable of running in three modes:
 1) In debug mode, with detailed debug messages.
 2) In normal mode, with normal status messages.
 3) In test mode, with detailed test messages.
 You should also use a #DEFINE variable to select from blocking or non-blocking UART device driver use (see below), and a #DEFINE variable to select echo or application mode (see below).
+
 Part 1. (80 points) UART-based Communications with PC Terminal Program
 Circular Buffer Functions
 Develop a set of circular buffer interface functions for characters. These functions should be capable of working with multiple circular buffers by referencing a provided pointer to a circular buffer structure. You will likely have individual circular buffers active for the transmit queue and the receive queue.
@@ -102,6 +103,7 @@ Part 2 (10 points) – Capture Oscilloscope trace of UART traffic between KL25Z 
 You will need to capture a character transaction while in Echo mode showing the receive and transmit operations between the PC and the KL25Z.
 Any clear image of the two transactions is fine. You should be able to annotate the image of the transaction to show key fields (start, data, stop, etc.) being transferred in your PDF submission.
 If you have access to a logic analyzer, you could use that as an alternate for capturing the transaction waveforms.
+
 Part 3 (10 points) – FMEA (Failure Modes and Effects Analysis) document for the project
 Create an Excel (or other) spreadsheet with the following columns:
 • Potential Failure Mode (how could the failure occur)
