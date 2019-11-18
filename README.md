@@ -2,7 +2,7 @@
 
 ## Contributors - Utkarsh Dviwedi and Harsh Rathore
  
-#Problem Statement 
+# Problem Statement 
  UART Communications with PC 
 The project will have you connect to the KL25Z USB port to send and receive data from a PC-based terminal program. This setup will allow you to exercise more advanced firmware topics, including UART communication device drivers, circular buffers, and more on interrupts and timers. You will also capture oscilloscope or logic analyzer output and develop an FMEA document for the project.
 This project is targeted to run on the KL25Z only – the program should (as in project 4) be capable of running in three modes:
@@ -11,7 +11,7 @@ This project is targeted to run on the KL25Z only – the program should (as in 
 3) In test mode, with detailed test messages.
 You should also use a #DEFINE variable to select from blocking or non-blocking UART device driver use (see below), and a #DEFINE variable to select echo or application mode (see below).
 
-##Part 1. (80 points) UART-based Communications with PC Terminal Program
+## Part 1. (80 points) UART-based Communications with PC Terminal Program
 Circular Buffer Functions
 Develop a set of circular buffer interface functions for characters. These functions should be capable of working with multiple circular buffers by referencing a provided pointer to a circular buffer structure. You will likely have individual circular buffers active for the transmit queue and the receive queue.
 • Define structure and dynamic memory allocation method for circular buffers
@@ -30,7 +30,6 @@ o Note that the maximum size of the buffer should equal the maximum number of el
 UART Device Driver 1 – Blocking/Polled
 Develop a set of functions to implement polling of UART hardware. These functions should only use the predefined definitions in MKL25Z4.h (do not use higher-level functions provided by fsl*.h or other SDK includes). Note, for both UART drivers, use UART0 to have access to the full UART function set.
 • Function for UART hardware initialization including baud rate and serial message format (parity, start/stop bits)
-
 • Function to check whether the transmitter is available to accept a new character for transmission
 • Function to transmit a character assuming transmitter is available.
 • Function using these two functions to wait (block) for the transmitter to be available and then once available transmit a character and return
@@ -99,12 +98,12 @@ o Create function(s) to add (reallocate) memory to resize a circular buffer
 o Use this function in a situation (such as the report storage) when an overfill error occurs
 o Include test of this function in the uCUnit test case suite
 
-Part 2 (10 points) – Capture Oscilloscope trace of UART traffic between KL25Z and the PC
+## Part 2 (10 points) – Capture Oscilloscope trace of UART traffic between KL25Z and the PC
 You will need to capture a character transaction while in Echo mode showing the receive and transmit operations between the PC and the KL25Z.
 Any clear image of the two transactions is fine. You should be able to annotate the image of the transaction to show key fields (start, data, stop, etc.) being transferred in your PDF submission.
 If you have access to a logic analyzer, you could use that as an alternate for capturing the transaction waveforms.
 
-Part 3 (10 points) – FMEA (Failure Modes and Effects Analysis) document for the project
+## Part 3 (10 points) – FMEA (Failure Modes and Effects Analysis) document for the project
 Create an Excel (or other) spreadsheet with the following columns:
 • Potential Failure Mode (how could the failure occur)
 • Potential Failure Effect (what is the impact of the failure)
