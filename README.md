@@ -1,6 +1,8 @@
 # PES_PROJECT_5- Principles of Embedded Software 
 
 ## Contributors - Utkarsh Dviwedi and Harsh Rathore
+ 
+#Problem Statement 
  UART Communications with PC 
 The project will have you connect to the KL25Z USB port to send and receive data from a PC-based terminal program. This setup will allow you to exercise more advanced firmware topics, including UART communication device drivers, circular buffers, and more on interrupts and timers. You will also capture oscilloscope or logic analyzer output and develop an FMEA document for the project.
 This project is targeted to run on the KL25Z only – the program should (as in project 4) be capable of running in three modes:
@@ -9,7 +11,7 @@ This project is targeted to run on the KL25Z only – the program should (as in 
 3) In test mode, with detailed test messages.
 You should also use a #DEFINE variable to select from blocking or non-blocking UART device driver use (see below), and a #DEFINE variable to select echo or application mode (see below).
 
-Part 1. (80 points) UART-based Communications with PC Terminal Program
+##Part 1. (80 points) UART-based Communications with PC Terminal Program
 Circular Buffer Functions
 Develop a set of circular buffer interface functions for characters. These functions should be capable of working with multiple circular buffers by referencing a provided pointer to a circular buffer structure. You will likely have individual circular buffers active for the transmit queue and the receive queue.
 • Define structure and dynamic memory allocation method for circular buffers
@@ -49,9 +51,7 @@ Remember, you should not do any processing in the interrupt handler. The interru
 Echo Mode and Application Mode
 If the #DEFINE for echo operation is in place, use the echo function in the device driver to send any received characters back to the PC terminal program.
 If the #DEFINE for application operation is in place, run the following application:
-Create an application that maintains a count of the unique characters that have been received by the UART device driver since the beginning of program execution. The report will show all characters
-
-received along with counts. Whenever the UART is able to transmit, send a formatted report to the PC terminal program. This report, and its associated data structure, should continue to accumulate characters and character counts for as long as a single execution is running.
+Create an application that maintains a count of the unique characters that have been received by the UART device driver since the beginning of program execution. The report will show all characters received along with counts. Whenever the UART is able to transmit, send a formatted report to the PC terminal program. This report, and its associated data structure, should continue to accumulate characters and character counts for as long as a single execution is running.
 For example, if the PC sent the characters in the word “Character”, the resulting report would look like (with data in ASCII value order):
 C – 1; a – 2; c – 1; e – 1; h – 1; r – 2; s – 1; t – 1
 Note that this report may be interrupted by incoming data from the PC, but once transmit is clear, the report should restart and attempt to send the report data to the PC again.
@@ -116,3 +116,32 @@ Create an Excel (or other) spreadsheet with the following columns:
 • Detection (1-10) (how hard is this error to detect, 10 = hardest)
 • Risk Priority Number = Severity * Occurrence * Detection
 Pick six error modes you can think of in the interactions between the PC and the KL25Z. Fill out the columns with your observations on the error mode and determine the Risk Priority Number for the risk.
+
+## Description of Repository contents
+
+ 1. **UART_TEST.c**   --Contains the main function , UART, Functions and Initializations
+ 2. **UART.h**  --Contains defined macros, include files and function declarations
+ 3. **logger.c**   --Contains the Logger functions 
+ 4. **UART.c**  --Contains all functions needed by UART driver
+ 5. **UART.h** --Contains the declarations for UART code
+ 6. **system.c**   -- Unit test Library file
+ 7. **system.h**  -- Unit test Library file
+ 8. **uCUnit.h**  -- Unit test Library file
+ 9. **CircularBuffer.c** --Contains all functions needed to implement circular buffer
+ 10. **CircularBuffer.c** --Contains the declarations for circular buffer code
+ 11. **LED.c** --Contains all the functions and initialisation requried for the LED to function
+ 12. **LED.h** --Contains all declarations for led.c
+
+## OBSERVATIONS
+
+ 1. **Circular Buffer** -The Circular buffer code ran perfectly when tested seperately for it. When integarted with the Uart code, it seemed to throw a lot of errors together with garbage values on the terminal host.
+ 2. **Logger** - Implementing the logger function to print the status of test, debug and status mode turned out to be very time consuming as all the functions messages were called by a single logger function with the use of loggers for different states. Also ha d to define #if for each finction to print the messages of them in different modes as needed by the user.
+ 3. **Uart** - The uart throwed minimal warnings but did not seem to work at the start because of a different baud rate and because the clock frequency applied was two times it was required for smm=ooth uart communication. Changing the systick clock in the baud rate calculation to half helped in getting proper results.
+
+
+
+## Installation and Execution Notes
+ 1. **LED INIT and MUX** - We need to initialize the GPIO of the LEDs and directions of PTB18(Red LED) ,PTB19(Green LED) and PTBD1(Blue LED)
+ 2. **Set the Unit test and logger Mode flags** There are global Flags for logger and Unit test , Set the debug flag to 1 to run it in the debug mode and the unit test flag to 1 to run the unit tests.
+ 3. **Logger messagez** The logger messages are printed using the uart driver functions
+ 4. **Defines** #defines and #if are used at various places to run a particular mode and to print messages for a particular state.
