@@ -9,7 +9,7 @@ This project is targeted to run on the KL25Z only – the program should (as in 
 1) In debug mode, with detailed debug messages.
 2) In normal mode, with normal status messages.
 3) In test mode, with detailed test messages.
-You should also use a #DEFINE variable to select from blocking or non-blocking UART device driver use (see below), and a #DEFINE variable to select echo or application mode (see below).
+You should also use a #DEFINE variable to select from blocking or non-blocking UART device driver use (see below), and a #DEFINE variable to select echo or application mode (see below)
 
 ## Part 1. (80 points) UART-based Communications with PC Terminal Program
 Circular Buffer Functions
