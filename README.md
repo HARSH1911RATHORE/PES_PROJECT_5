@@ -212,13 +212,14 @@ Pick six error modes you can think of in the interactions between the PC and the
 ## OBSERVATIONS
 
  1. **Circular Buffer** -The Circular buffer code ran perfectly when tested seperately for it. When integarted with the Uart code, it seemed to throw a lot of errors together with garbage values on the terminal host.
- 2. **Logger** - Implementing the logger function to print the status of test, debug and status mode turned out to be very time consuming as all the functions messages were called by a single logger function with the use of loggers for different states. Also ha d to define #if for each finction to print the messages of them in different modes as needed by the user.
- 3. **Uart** - The uart throwed minimal warnings but did not seem to work at the start because of a different baud rate and because the clock frequency applied was two times it was required for smm=ooth uart communication. Changing the systick clock in the baud rate calculation to half helped in getting proper results.
+ 2. **Logger** - Implementing the logger function to print the status of test, debug and status mode turned out to be very time consuming as all the functions messages were called by a single logger function with the use of loggers for different states. Also had to define #if for each finction to print the messages of them in different modes as needed by the user.
+ 3. **Uart** - The uart throwed minimal warnings but did not seem to work at the start because of a different baud rate and because the clock frequency applied was two times it was required for smooth uart communication. Changing the systick clock in the baud rate calculation to half helped in getting proper results.
 
 
 
 ## Installation and Execution Notes
  1. **LED INIT and MUX** - We need to initialize the GPIO of the LEDs and directions of PTB18(Red LED) ,PTB19(Green LED) and PTBD1(Blue LED)
- 2. **Set the Unit test and logger Mode flags** There are global Flags for logger and Unit test , Set the debug flag to 1 to run it in the debug mode and the unit test flag to 1 to run the unit tests.
- 3. **Logger messagez** The logger messages are printed using the uart driver functions
- 4. **Defines** #defines and #if are used at various places to run a particular mode and to print messages for a particular state.
+ 2. **Set the Unit test and logger Mode flags** -There are global Flags for logger and Unit test , Set the debug flag to 1 to run it in the debug mode and the unit test flag to 1 to run the unit tests.
+ 3. **Logger messagez** - The logger messages are printed using the uart driver functions
+ 4. **Defines** - #defines and #if are used at various places to run a particular mode and to print messages for a particular state.
+ 5. **Application mode** - The count of characters/report is obtained by pressing '=' character.
