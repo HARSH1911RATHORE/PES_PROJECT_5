@@ -2,8 +2,30 @@
 
 #include <stdio.h>
 
+
+
 //Q_T TxQ, RxQ;
 Circilar_Buffer TxQ, RxQ;
+
+
+
+/* BEGIN - UART0 Device Driver
+
+
+
+	Code created by Shannon Strutz
+
+	Date : 5/7/2014
+
+	Licensed under CC BY-NC-SA 3.0
+
+	http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+
+
+	Modified by Alex Dean 9/13/2016
+
+*/
 
 FILE __stdout;  //Use with printf
 
@@ -15,7 +37,13 @@ struct __FILE
 
 };
 
+
+
 FILE __stdin;		//use with fget/sscanf, or scanf
+
+
+
+
 
 //Retarget the fputc method to use the UART0
 
@@ -29,6 +57,8 @@ int fputc(int ch, FILE *f){
 
 }
 
+
+
 //Retarget the fgetc method to use the UART0
 
 int fgetc(FILE *f){
@@ -39,6 +69,8 @@ int fgetc(FILE *f){
 
 }
 
+
+
 // Code listing 8.8, p. 231
 
 void Init_UART0(uint32_t baud_rate) {
@@ -46,6 +78,8 @@ void Init_UART0(uint32_t baud_rate) {
 	uint16_t sbr;
 
 	uint8_t temp;
+
+
 
 	// Enable clock gating for UART0 and Port A
 
@@ -167,24 +201,49 @@ void Init_UART0(uint32_t baud_rate) {
 
 	UART0->S1 &= ~UART0_S1_RDRF_MASK;
 
+
+
 }
 
 
+
+/* END - UART0 Device Driver
+
+	Code created by Shannon Strutz
+
+	Date : 5/7/2014
+
+	Licensed under CC BY-NC-SA 3.0
+
+	http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+
+
+	Modified by Alex Dean 9/13/2016
+
+*/
+
+
+
+// Code listing 8.9, p. 233
+
 void UART0_Transmit_Poll(uint8_t data) {
 
-		while (!(UART0->S1 & UART0_S1_TDRE_MASK))               //check for transmit register ready and trasmit
+		while (!(UART0->S1 & UART0_S1_TDRE_MASK))
 
 			;
 
 		UART0->D = data;
-
+//		char c;
+//		c=getchar();
+//		putchar(c);
 }
 
 
 
 uint8_t UART0_Receive_Poll(void) {
 
-		while (!(UART0->S1 & UART0_S1_RDRF_MASK))               //check for receive buffer full and receive
+		while (!(UART0->S1 & UART0_S1_RDRF_MASK))
 
 			;
 
@@ -194,11 +253,12 @@ uint8_t UART0_Receive_Poll(void) {
 
 
 
-// UART0 IRQ Handler
+// UART0 IRQ Handler. Listing 8.12 on p. 235
 
 void UART0_IRQHandler(void) {
 
 	uint8_t ch;
+
 
 
 	if (UART0->S1 & (UART_S1_OR_MASK |UART_S1_NF_MASK |
