@@ -224,4 +224,4 @@ Pick six error modes you can think of in the interactions between the PC and the
  4. **Defines** - #defines and #if are used at various places to run a particular mode and to print messages for a particular state.
  5. **Application mode** - The count of characters/report is obtained by pressing '=' character.
  
- **REFERNCE=https://github.com/alexander-g-dean/ESF/blob/master/Code/Chapter_8/Serial-Demo/src/UART.c**
+ **REFERENCE=https://github.com/alexander-g-dean/ESF/blob/master/Code/Chapter_8/Serial-Demo/src/UART.c**
