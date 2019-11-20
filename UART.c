@@ -2,29 +2,8 @@
 
 #include <stdio.h>
 
-#include<stdint.h>
-
-Q_T TxQ, RxQ;
-
-
-
-/* BEGIN - UART0 Device Driver
-
-
-
-	Code created by Shannon Strutz
-
-	Date : 5/7/2014
-
-	Licensed under CC BY-NC-SA 3.0
-
-	http://creativecommons.org/licenses/by-nc-sa/3.0/
-
-
-
-	Modified by Alex Dean 9/13/2016
-
-*/
+//Q_T TxQ, RxQ;
+Circilar_Buffer TxQ, RxQ;
 
 FILE __stdout;  //Use with printf
 
@@ -36,13 +15,7 @@ struct __FILE
 
 };
 
-
-
 FILE __stdin;		//use with fget/sscanf, or scanf
-
-
-
-
 
 //Retarget the fputc method to use the UART0
 
@@ -56,8 +29,6 @@ int fputc(int ch, FILE *f){
 
 }
 
-
-
 //Retarget the fgetc method to use the UART0
 
 int fgetc(FILE *f){
@@ -68,8 +39,6 @@ int fgetc(FILE *f){
 
 }
 
-
-
 // Code listing 8.8, p. 231
 
 void Init_UART0(uint32_t baud_rate) {
@@ -77,10 +46,6 @@ void Init_UART0(uint32_t baud_rate) {
 	uint16_t sbr;
 
 	uint8_t temp;
-	enum function_type function=uart_init;
-	enum log_level level=test;
-	logger(function,level,true);
-
 
 	// Enable clock gating for UART0 and Port A
 
@@ -99,20 +64,10 @@ void Init_UART0(uint32_t baud_rate) {
 	// Set UART clock to 48 MHz clock
 
 	SIM->SOPT2 |= SIM_SOPT2_UART0SRC(1);
-//	UART0SRC
-//	UART0 clock source select
-//	Selects the clock source for the UART0 transmit and receive clock.
-//	00 Clock disabled
-//	01 MCGFLLCLK clock or MCGPLLCLK/2 clock
-//	10 OSCERCLK clock
-//	11 MCGIRCLK clock
 
 	SIM->SOPT2 |= SIM_SOPT2_PLLFLLSEL_MASK;
 
-//	PLL/FLL clock select
-//	Selects the MCGPLLCLK or MCGFLLCLK clock for various peripheral clocking options.
-//	0 MCGFLLCLK clock
-//	1 MCGPLLCLK clock with fixed divide by two
+
 
 	// Set pins to UART0 Rx and Tx
 
@@ -178,9 +133,9 @@ void Init_UART0(uint32_t baud_rate) {
 
 	// Enable interrupts. Listing 8.11 on p. 234
 
-	Q_Init(&TxQ);
+	Circular_Buffer_Init(&TxQ);
 
-	Q_Init(&RxQ);
+	Circular_Buffer_Init(&RxQ);
 
 
 
@@ -212,68 +167,38 @@ void Init_UART0(uint32_t baud_rate) {
 
 	UART0->S1 &= ~UART0_S1_RDRF_MASK;
 
-
-
-}
-
-//#if enum function_type function=transmitter_available
-int Tranmsit_available()
-{
-	if (UART0->S1 & UART0_S1_TDRE_MASK)           //check for the transmit empty flag
-		return 1;
-	else
-		return 2;
-}
-
-void Transmit_character(uint8_t data)
-{
-		UART0->D=data;				//transmit the data
-}
-
-void UART0_Transmit_Poll(uint8_t data)
-{
-	int check_tx;
-	do
-	{
-		check_tx=Tranmsit_available();     //keep calling the function until the transmitter is ready to transmit data
-	}while (check_tx!=1);
-
-	Transmit_character(data);
-}
-
-int Receive_available()
-{
-	if (UART_S1_RDRF(1))				//check for receiver full flag
-		return 1;
-	else
-		return 0;
-}
-
-uint8_t Receieve_character()
-{
-		return UART0->D;              //read data from the register
 }
 
 
-uint8_t UART0_Receive_Poll(void)
-{
+void UART0_Transmit_Poll(uint8_t data) {
 
-	int check_rx;
-	do{
-		check_rx=Receive_available();      //wait for the receiver to be ready to receive data												//once ready,receive data
-		}
-	while (check_rx!=1);
+		while (!(UART0->S1 & UART0_S1_TDRE_MASK))               //check for transmit register ready and trasmit
 
-	Receieve_character();
+			;
 
+		UART0->D = data;
 
 }
 
+
+
+uint8_t UART0_Receive_Poll(void) {
+
+		while (!(UART0->S1 & UART0_S1_RDRF_MASK))               //check for receive buffer full and receive
+
+			;
+
+		return UART0->D;
+
+}
+
+
+
+// UART0 IRQ Handler
 
 void UART0_IRQHandler(void) {
 
 	uint8_t ch;
-
 
 
 	if (UART0->S1 & (UART_S1_OR_MASK |UART_S1_NF_MASK |
@@ -298,9 +223,9 @@ void UART0_IRQHandler(void) {
 
 		ch = UART0->D;
 
-		if (!Q_Full(&RxQ)) {
+		if (!Circular_Buffer_Full(&RxQ)) {
 
-			Q_Enqueue(&RxQ, ch);
+			Circular_Buffer_Add(&RxQ, ch);
 
 		} else {
 
@@ -318,17 +243,20 @@ void UART0_IRQHandler(void) {
 
 		// can send another character
 
-		if (!Q_Empty(&TxQ)) {
+		if (!Circular_Buffer_Empty(&TxQ)) {
 
-			UART0->D = Q_Dequeue(&TxQ);
+			UART0->D = Circular_Buffer_Remove(&TxQ);
 
 		} else {
 
 			// queue is empty so disable transmitter interrupt
 
 			UART0->C2 &= ~UART0_C2_TIE_MASK;
+
 		}
+
 	}
+
 }
 
 
@@ -340,7 +268,9 @@ void Send_String_Poll(uint8_t * str) {
 	while (*str != '\0') { // Send characters up to null terminator
 
 		UART0_Transmit_Poll(*str++);
+
 	}
+
 }
 
 
@@ -351,9 +281,11 @@ void Send_String(uint8_t * str) {
 
 	while (*str != '\0') { // copy characters up to null terminator
 
-		while (Q_Full(&TxQ)); // wait for space to open up
+		while (Circular_Buffer_Full(&TxQ))
 
-		Q_Enqueue(&TxQ, *str);
+			; // wait for space to open up
+
+		Circular_Buffer_Add(&TxQ, *str);
 
 		str++;
 
@@ -363,7 +295,7 @@ void Send_String(uint8_t * str) {
 
 	if (!(UART0->C2 & UART0_C2_TIE_MASK)) {
 
-		UART0->D = Q_Dequeue(&TxQ);
+		UART0->D = Circular_Buffer_Remove(&TxQ);
 
 		UART0->C2 |= UART0_C2_TIE(1);
 
@@ -371,14 +303,20 @@ void Send_String(uint8_t * str) {
 
 }
 
+
+
+
+
 uint32_t Rx_Chars_Available(void) {
 
-	return Q_Size(&RxQ);
+	return Circular_Buffer_Size(&RxQ);
 
 }
 
+
+
 uint8_t	Get_Rx_Char(void) {
 
-	return Q_Dequeue(&RxQ);
+	return Circular_Buffer_Remove(&RxQ);
 
 }

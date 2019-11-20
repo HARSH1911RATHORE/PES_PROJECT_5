@@ -4,7 +4,7 @@
 
 void Delay (uint32_t dly) {
 
-  volatile uint32_t t;
+  volatile uint32_t t;                  //delay set to give time between logged messages and led blinking
 
 
 

@@ -2,7 +2,7 @@
  * system.h
  *
  *  Created on: Oct 21, 2019
- *      Author: Utkarsh Dviwedi
+ *      Author: Utkarsh Dviwedi and Harsh Rathore
  */
 
 #ifndef SYSTEM_H_

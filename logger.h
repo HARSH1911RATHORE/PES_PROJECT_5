@@ -5,17 +5,17 @@
 
 
 
-#define true 0
-#define false 1
+#define true 1                   //boolean
+#define false 0
 
 enum log_level{
-test,
-status,
-debug
+	test,
+	status,
+	debug                  			//enum for various test modes
 };
 enum function_type{
 
-	receiver_available,
+	receiver_available,         //enum defined for various function call print messages
 	receive_char,
 	receiver_poll,
 	transmitter_available,
@@ -39,10 +39,6 @@ enum function_type{
 };
 
 void logger(enum function_type functions,enum log_level level,uint8_t message);
-//void log_receiver_available(enum function_type functions,enum log_level level,uint8_t message);
-//void log_receiver_char(enum function_type functions,enum log_level level);
-////void log_transmitter_available(enum function_type functions,enum log_level level,uint8_t message);
-//void log_transmitter_char(enum function_type functions,enum log_level level);
 void log_uart_mode_int(enum function_type functions);
 void log_uart_mode_poll(enum function_type functions);
 void log_uart_init(enum function_type functions);
