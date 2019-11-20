@@ -9,8 +9,8 @@
 #define false 1
 
 enum log_level{
-status,
 test,
+status,
 debug
 };
 enum function_type{
@@ -39,10 +39,10 @@ enum function_type{
 };
 
 void logger(enum function_type functions,enum log_level level,uint8_t message);
-void log_receiver_available(enum function_type functions,enum log_level level,uint8_t message);
-void log_receiver_char(enum function_type functions,enum log_level level);
-void log_transmitter_available(enum function_type functions,enum log_level level,uint8_t message);
-void log_transmitter_char(enum function_type functions,enum log_level level);
+//void log_receiver_available(enum function_type functions,enum log_level level,uint8_t message);
+//void log_receiver_char(enum function_type functions,enum log_level level);
+////void log_transmitter_available(enum function_type functions,enum log_level level,uint8_t message);
+//void log_transmitter_char(enum function_type functions,enum log_level level);
 void log_uart_mode_int(enum function_type functions);
 void log_uart_mode_poll(enum function_type functions);
 void log_uart_init(enum function_type functions);
@@ -50,7 +50,7 @@ void log_uart_echo(enum function_type functions);
 void log_uart_application(enum function_type functions);
 void log_buffer_full(enum function_type functions,enum log_level level);
 void log_buffer_empty(enum function_type functions,enum log_level level);
-void log_buffer_valid(enum function_type functions,enum log_level level);
+void log_buffer_valid(enum function_type functions,enum log_level level,uint8_t message);
 void log_buffer_init(enum function_type functions,enum log_level level);
 void log_buffer_add(enum function_type functions,enum log_level level,uint8_t message);
 void log_buffer_remove(enum function_type functions,enum log_level level,uint8_t message);
